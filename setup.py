@@ -14,20 +14,19 @@ setup(
               ],
     zip_safe = True,
     include_package_data = True,
-    url='https://git@bitbucket.org/genomematt/ambivert.git',
+    url='https://git@bitbucket.org/genomematt/pylazybam.git',
     license='BSD',
     entry_points={
-        'console_scripts': ['pylazybam_unique = pylazybam.unique:main',
+        'console_scripts': ['lazybam = pylazybam.cli:main',
                            ]
     },
-    test_suite = "pylazybam.tests.test_pylazybam",
+    test_suite = "pylazybam.tests.test_all",
     description='pylazybam - a pure python bam parser for rapid content based read sorting',
     long_description=open('README.txt').read(),
     classifiers=[
           'Development Status :: 5 - Production/Stable',
           'License :: OSI Approved :: BSD License',
           'Operating System :: POSIX',
-          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
