@@ -236,9 +236,11 @@ class FileReader():
                 block_size = struct.unpack('<i',raw_blocksize)[0]
                 alignment = raw_blocksize+self.ubam.read(block_size) #add back size so alignment record intact
                 yield alignment
-            except:
+            except ValueError:
                 if not self.ubam.read():
                     break
+                else:
+                    raise
     
     def __iter__(self):
         return self
