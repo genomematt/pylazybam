@@ -8,7 +8,6 @@ License     : BSD-3-Clause
 Maintainer  : matthew.wakefield@unimelb.edu.au 
 Portability : POSIX
 """
-from __future__ import annotations
 import sys, os
 import struct
 from array import array
@@ -813,7 +812,7 @@ class FileReader:
         self.index_to_ref[-1] = "*"
         self.alignments = self._get_alignments()
 
-    def __enter__(self: FileReader) -> FileReader:
+    def __enter__(self):
         """Return self for use in WITH statement."""
         return self
 
