@@ -672,14 +672,14 @@ def decode_cigar(raw_cigar: bytes) -> str:
     return "".join(cigar)
 
 
-def decode_base_qual(raw_base_qual: Iterable[byte],
+def decode_base_qual(raw_base_qual: bytes,
                      offset: int = 33) -> str:
     """
     Decode raw BAM base quality scores into ASCII values
 
     Parameters
     ----------
-    raw_base_qual : Iterable[byte]
+    raw_base_qual : bytes
         The base quality section of a BAM alignment record as bytes
         eg the output from pylazybam.bam.get_raw_base_qual()
 
