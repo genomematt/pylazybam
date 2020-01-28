@@ -8,7 +8,6 @@ License     : BSD-3-Clause
 Maintainer  : matthew.wakefield@unimelb.edu.au 
 Portability : POSIX
 """
-from __future__ import annotations
 import sys, os
 import struct
 from array import array
@@ -673,14 +672,14 @@ def decode_cigar(raw_cigar: bytes) -> str:
     return "".join(cigar)
 
 
-def decode_base_qual(raw_base_qual: Iterable[byte],
+def decode_base_qual(raw_base_qual: bytes,
                      offset: int = 33) -> str:
     """
     Decode raw BAM base quality scores into ASCII values
 
     Parameters
     ----------
-    raw_base_qual : Iterable[byte]
+    raw_base_qual : bytes
         The base quality section of a BAM alignment record as bytes
         eg the output from pylazybam.bam.get_raw_base_qual()
 
@@ -813,7 +812,7 @@ class FileReader:
         self.index_to_ref[-1] = "*"
         self.alignments = self._get_alignments()
 
-    def __enter__(self: FileReader) -> FileReader:
+    def __enter__(self):
         """Return self for use in WITH statement."""
         return self
 
