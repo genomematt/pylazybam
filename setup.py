@@ -22,9 +22,9 @@ setup(
     },
     test_suite = "pylazybam.tests.test_all",
     description='pylazybam - a pure python bam parser for rapid content based read sorting',
-    long_description=open('README.txt').read(),
+    long_description='pylazybam - a pure python bam parser for rapid content based read sorting',
     classifiers=[
-          'Development Status :: 5 - Production/Stable',
+          'Development Status :: 4 - Beta',
           'License :: OSI Approved :: BSD License',
           'Operating System :: POSIX',
           'Programming Language :: Python :: 3.7',
