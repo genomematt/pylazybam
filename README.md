@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/genomematt/pylazybam.svg?branch=master)](https://travis-ci.org/genomematt/pylazybam)
-
 [![Coverage Status](https://coveralls.io/repos/genomematt/pylazybam/badge.svg)](https://coveralls.io/r/genomematt/pylazybam)
 
 Pylazybam
@@ -67,6 +66,7 @@ For example, a simple script to count the number of primary mappings per referen
     print(counts)
     
 For more information on available functions and documentation
+
     from pylazybam import bam
     help(bam)
  
@@ -91,14 +91,3 @@ Citing pylazybam
 
 pylazybam is in early development and does not yet have a publication. Please cite the github repository.
 Each release will have a Zenodo DOI identifier that can be cited.
-
-References
-=================
-Langmead B, Salzberg S. Fast gapped-read alignment with Bowtie 2.
-Nature Methods. 2012, 9:357-359.
-http://bowtie-bio.sourceforge.net/bowtie2/
-
-Kim D, Langmead B, Salzberg SL. HISAT: a fast spliced aligner with low memory requirements.
-Nat Methods. 2015 12:357-60.
-https://github.com/infphilo/hisat
-
