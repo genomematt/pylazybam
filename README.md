@@ -51,7 +51,21 @@ In most applications this will involve opening a compressed BAM file with `gzip`
 
 For example, a simple script to count the number of primary mappings per reference:
 
-
+    import gzip
+    from collections import Counter
+    from pylazybam import bam
+    
+    counts = Counter()
+    
+    with bam.FileReader(gzip.open('path/to/bam.bam')) as mybam:    
+        for align in mybam:
+            if bam.is_flag(align, bam.FLAG['primary']):
+                ref_index = bam.get_ref_index[align]
+                refname = mybam.index_to_ref[ref_index]
+                counts.update([refname,])
+    
+    print(counts)
+    
 For more information on available functions and documentation
     from pylazybam import bam
     help(bam)
@@ -60,7 +74,7 @@ Examples of how to use pylazybam can be found in [example_usage.ipynb](example_u
 
 Contributing to pylazybam
 =========================
-pylazybam is licensed under the BSD three clause license.  You are free to fork this repository under the terms of that
+Pylazybam is licensed under the BSD three clause license.  You are free to fork this repository under the terms of that
  license.  If you have suggested changes please start by raising an issue in the issue tracker.  Pull requests are 
 welcome and will be included at the discretion of the author, but must have 100% test coverage.
 
