@@ -65,6 +65,8 @@ class test_main(unittest.TestCase):
         for i in range(41):
             next(the_bam)
         self.assertEqual(next(the_bam), ALIGN42)
+        for align in the_bam:
+            pass
 
     def test_get_ref_index(self):
         self.assertEqual(bam.get_ref_index(ALIGN0), 12)

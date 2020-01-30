@@ -553,6 +553,8 @@ class FileReader:
         while self._ubam:
             try:
                 raw_blocksize = self._ubam.read(4)
+                if not raw_blocksize:
+                    break
                 block_size = struct.unpack("<i", raw_blocksize)[0]
                 alignment = raw_blocksize + self._ubam.read(
                     block_size
