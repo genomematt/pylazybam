@@ -11,6 +11,7 @@ Portability : POSIX
 
 from array import array
 from typing import Dict
+from pylazybam import bam
 
 FLAGS: Dict[str,int] = {
     "paired": 0x1,
@@ -125,4 +126,4 @@ def is_flag(alignment: bytes, flag: int) -> bool:
     See https://samtools.github.io/hts-specs/SAMv1.pdf for details.
 
     """
-    return bool(bam.get_flag(a) & flag)
+    return bool(bam.get_flag(alignment) & flag)

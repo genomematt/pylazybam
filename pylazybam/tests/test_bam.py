@@ -149,3 +149,6 @@ class test_main(unittest.TestCase):
 
     def test_get_MD(self):
         self.assertEqual(bam.get_MD(ALIGN0), '99')
+
+    def test_is_flag(self):
+        self.assertTrue(bam.is_flag(ALIGN0,bam.FLAGS['forward']))
