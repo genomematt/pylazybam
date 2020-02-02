@@ -58,6 +58,7 @@ class test_main(unittest.TestCase):
         self.assertEqual(the_bam.header, HEADER)
         self.assertEqual(the_bam.index_to_ref, INDEX_TO_REF)
         self.assertEqual(the_bam.ref_to_index, REF_TO_INDEX)
+        self.assertEqual(the_bam.sort_order, 'unsorted')
 
     def test_FileReader_iteration(self):
         test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')

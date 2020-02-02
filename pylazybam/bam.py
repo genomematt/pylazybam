@@ -441,18 +441,28 @@ class FileReader:
 
     Attributes
     ----------
-        raw_header : bytes
-            The raw bytestring representing the bam header
-        raw_refs : bytes
-            The raw bytestring representing the reference sequences
         header : str
             The ASCII representation of the header
-        refs : Dict[str:int]
-            A dictionary of reference_name keys with reference_length
-        ref_to_index : Dict[str:int]
-            A dictionary mapping reference names to the bam numeric identifier
+
         index_to_ref : Dict[int:str]
             A dictionary mapping bam reference numeric identifiers to names
+
+        raw_header : bytes
+            The raw bytestring representing the bam header
+
+        raw_refs : bytes
+            The raw bytestring representing the reference sequences
+
+        refs : Dict[str:int]
+            A dictionary of reference_name keys with reference_length
+
+        ref_to_index : Dict[str:int]
+            A dictionary mapping reference names to the bam numeric identifier
+
+        sort_order : str
+            The value of the SO field indicating sort type. Value is as given in
+            the BAM file.
+            Should be one of 'unknown', 'unsorted', 'queryname' or 'coordinate'
 
     Notes
     -----
@@ -504,6 +514,8 @@ class FileReader:
         self.ref_to_index: Dict[str,int] = dict(zip(self.refs.keys(),
                                                     range(len(self.refs))))
         self.index_to_ref[-1] = "*"
+        self.sort_order = re.search(b'SO:[a-zA-Z]+',
+                                   self.raw_header)[0][3:].decode()
         self.alignments: Generator[bytes, None, None] = self._get_alignments()
 
     def __enter__(self):
@@ -524,7 +536,7 @@ class FileReader:
         raw_header_length = self._ubam.read(4)
         header_length = struct.unpack("<i", raw_header_length)[0]
         raw_header = raw_header_length + self._ubam.read(header_length)
-        header = raw_header[4:].decode("utf-8")
+        header = raw_header[4:].decode("latin-1")
         return (raw_header, header)
 
     def _read_refs(self) -> Tuple[bytes, Dict[str, int]]:
