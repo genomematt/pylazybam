@@ -10,6 +10,7 @@ import gzip
 import unittest
 
 from pkg_resources import resource_stream
+from tempfile import NamedTemporaryFile
 
 from pylazybam import bam
 
@@ -152,3 +153,30 @@ class test_main(unittest.TestCase):
 
     def test_is_flag(self):
         self.assertTrue(bam.is_flag(ALIGN0,bam.FLAGS['forward']))
+
+    def test_round_trip(self):
+        test_bam = resource_stream(__name__, 'data/minitest.bam')
+        # get raw uncompressed content
+        content = gzip.open(test_bam).read()
+        # go back to start of file and parse with Filereader
+        test_bam.seek(0)
+        the_bam = bam.FileReader(gzip.open(test_bam))
+        out_file = NamedTemporaryFile(delete=False)
+        out_file_name = out_file.name
+        out_bam = bam.FileWriter(out_file_name)
+        out_bam.write(the_bam.magic)
+        out_bam.write(the_bam.raw_header)
+        out_bam.write(the_bam.raw_refs)
+        for align in the_bam:
+            out_bam.write(align)
+        out_bam.close()
+        # parse the new temporary file
+        new_bam = bam.FileReader(gzip.open(out_file_name))
+        self.assertEqual(the_bam.header,new_bam.header)
+        try:
+            while True:
+                align = next(the_bam)
+                align2 = next(the_bam)
+                self.assertEqual(align,align2)
+        except StopIteration:
+            pass
