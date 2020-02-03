@@ -583,3 +583,123 @@ class FileReader:
 
     def __next__(self):
         return next(self.alignments)
+
+    def get_full_raw_header(self):
+        """
+        Get a complete BAM header with all elements suitable for writing to a
+        bam.FileWriter
+
+        Returns
+        -------
+        bytes
+            The complete raw BAM header including the BAM magic and reference
+            block
+        """
+        self.update_header_length()
+        if self.n_ref != self.raw_refs.count(b'@SQ'):
+            raise ValueError(f"Invalid header: should be {self.n_ref} "
+                             f"references but only found {len(refs)}"
+                             )
+        return self.magic + self.raw_header + self.raw_refs
+
+    def update_header_length(self, raw_header=None):
+        inplace = False
+        if not raw_header:
+            inplace = True
+            raw_header = self.raw_header
+        encoded_length = struct.unpack("<i", raw_header[:4])[0]
+        actual_length = len(raw_header[4:])
+        if not encoded_length == actual_length:
+            raw_header = (struct.pack("<i", actual_length)
+                               + raw_header[4:])
+        if inplace:
+            self.raw_header = raw_header
+        else:
+            return raw_header
+
+    def get_updated_header(self,
+                  id: str,
+                  program: str,
+                  version: str,
+                  command: str = None,
+                  description: str = None,
+                  raw_header = None,
+                  ):
+        """
+        Get a modified version of the header with additional program information
+        in a @PG BAM header suitable for writing to a new output file.
+
+        Does not include the BAM magic or the BAM reference block.
+
+        Note that the header should be written after self.magic and before
+        self.raw_refs
+
+        Parameters
+        ----------
+        id : str
+            a unique identifier of this action of the program on the BAM
+
+        program : str
+            the name of the program used to process the BAM
+
+        version : str
+            version number of the program used to process the BAM
+
+        command : str
+            the command and arguments to the program used to process the BAM
+
+        description : str
+            optional description
+
+        raw_header : bytes
+            a raw BAM formatted header without BAM magic or REF block
+            used for recursive modification to add multiple
+
+        Notes
+        -----
+        Parameters will be utf-8 encoded
+        If there are existing @PG records the last record will be used as PP
+
+        See Also
+        --------
+        update_header - calls this method to modify self.raw_header in place
+        get_full_raw_header
+        """
+        if raw_header == None:
+            raw_header = self.raw_header
+        PG_match = re.search(b'@PG.+',raw_header)
+        CO_match = re.search(b'@CO.+',raw_header)
+        CO_start = CO_match.span()[0] if CO_match else len(raw_header)
+        PG_start = PG_match.span()[0] if PG_match else CO_start
+        raw_HD_and_SQ = raw_header[:PG_start]
+        raw_PG = raw_header[PG_start:CO_start]
+        raw_CO = raw_header[CO_start:]
+        assert raw_HD_and_SQ+raw_PG+raw_CO == raw_header
+
+        new_PG_line = f"@PG\tID:{id}\tPN:{program}\tVN:{version}".encode('utf-8')
+
+        if raw_PG:
+            new_PG_line += (b"\tPP:"
+                            + re.findall(rb'ID:[0-9a-zA-Z]+',raw_PG)[-1][3:])
+
+        if command:
+            new_PG_line += b"\tCL:" + command.encode('utf-8')
+
+        if description:
+            new_PG_line += b"\tDS:" + description.encode('utf-8')
+
+        new_PG_line += b'\n'
+
+        return self.update_header_length(raw_header= (raw_HD_and_SQ
+                                                      + raw_PG
+                                                      + new_PG_line
+                                                      + raw_CO
+                                                      )
+                                         )
+
+    def update_header(self, *args, **kwargs):
+        """Use get_updated_header to update self.raw_header inplace
+
+        See get_updated_header for Parameters and documentation
+        """
+        self.raw_header = self.get_full_raw_header()

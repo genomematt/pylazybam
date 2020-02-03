@@ -6,7 +6,7 @@ pylazybam/tests/test_bam.py
 Copyright (c) 2018-2020 Matthew Wakefield, The Walter and Eliza Hall Institute and The University of Melbourne. All rights reserved.
 """
 
-import gzip
+import gzip, struct
 import unittest
 
 from pkg_resources import resource_stream
@@ -59,6 +59,31 @@ class test_main(unittest.TestCase):
         self.assertEqual(the_bam.index_to_ref, INDEX_TO_REF)
         self.assertEqual(the_bam.ref_to_index, REF_TO_INDEX)
         self.assertEqual(the_bam.sort_order, 'unsorted')
+
+    def test_update_header_length(self):
+        test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')
+        the_bam = bam.FileReader(gzip.open(test_bam))
+        the_bam.raw_header = the_bam.raw_header+b'@CO\tThis is an extra comment\n'
+        the_bam.update_header_length()
+        self.assertEqual(len(the_bam.raw_header[4:]),
+                         struct.unpack("<i", the_bam.raw_header[:4])[0])
+        header_with_incorrect_len = struct.pack("<i",42)+RAW_HEADER[4:]
+        self.assertEqual(the_bam.update_header_length(header_with_incorrect_len)[:4],
+                         RAW_HEADER[:4])
+
+    def test_get_updated_header(self):
+        test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')
+        the_bam = bam.FileReader(gzip.open(test_bam))
+        the_bam.raw_header = the_bam.raw_header+b'@CO\tThis is an extra comment\n'
+        the_bam.update_header_length()
+        updated_header = the_bam.get_updated_header(id='test',
+                                         program='test',
+                                         version='88.88.8')
+        self.assertEqual(updated_header[4:], #skip 4 bytes as len changed
+                         (RAW_HEADER[4:]
+                         + b'@PG\tID:test\tPN:test\tVN:88.88.8\tPP:bowtie2\n'
+                         + b'@CO\tThis is an extra comment\n')
+                         )
 
     def test_FileReader_iteration(self):
         test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')
