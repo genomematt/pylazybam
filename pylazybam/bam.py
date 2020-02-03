@@ -14,6 +14,7 @@ from pylazybam.bgzf import BgzfWriter as FileWriter
 from pylazybam.decoders import *
 from pylazybam.tags import *
 
+
 # Parsing functions
 
 
@@ -253,6 +254,7 @@ def get_read_name(alignment: bytes,
     len_read_name : int
         The length of the readname string
         eg from pylazybam.bam.get_len_read_name()
+
     Returns
     -------
     str
@@ -547,8 +549,8 @@ class FileReader:
 
         raw_nref = self._ubam.read(4)
         ref_buffer += raw_nref
-        n_ref = struct.unpack("<i", raw_nref)[0]
-        for i in range(n_ref):
+        self.n_ref = struct.unpack("<i", raw_nref)[0]
+        for i in range(self.n_ref):
             raw_lname = self._ubam.read(4)
             ref_buffer += raw_lname
             l_name = struct.unpack("<i", raw_lname)[0]
@@ -559,9 +561,14 @@ class FileReader:
             ref_buffer += raw_ref_length
             ref_length = struct.unpack("<i", raw_ref_length)[0]
             refs[ref_name] = ref_length
+        if self.n_ref != len(refs):
+            raise ValueError(f"Invalid header: should be {self.n_ref} "
+                             f"references but only found {len(refs)}"
+                             )
         return (ref_buffer, refs)
 
     def _get_alignments(self) -> Generator[bytes, None, None]:
+        """utility function to create an alignment generator"""
         while self._ubam:
             try:
                 raw_blocksize = self._ubam.read(4)
