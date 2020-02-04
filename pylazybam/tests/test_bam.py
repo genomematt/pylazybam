@@ -23,6 +23,8 @@ __maintainer__ = "Matthew Wakefield"
 __email__ = "wakefield@wehi.edu.au"
 __status__ = "Development/Beta"
 
+MIN32INT: int = -2147483648
+
 RAW_HEADER = b'h\x02\x00\x00@HD\tVN:1.0\tSO:unsorted\n@SQ\tSN:MT\tLN:16569\n@SQ\tSN:1\tLN:249250621\n@SQ\tSN:2\tLN:243199373\n@SQ\tSN:3\tLN:198022430\n@SQ\tSN:4\tLN:191154276\n@SQ\tSN:5\tLN:180915260\n@SQ\tSN:6\tLN:171115067\n@SQ\tSN:7\tLN:159138663\n@SQ\tSN:8\tLN:146364022\n@SQ\tSN:9\tLN:141213431\n@SQ\tSN:10\tLN:135534747\n@SQ\tSN:11\tLN:135006516\n@SQ\tSN:12\tLN:133851895\n@SQ\tSN:13\tLN:115169878\n@SQ\tSN:14\tLN:107349540\n@SQ\tSN:15\tLN:102531392\n@SQ\tSN:16\tLN:90354753\n@SQ\tSN:17\tLN:81195210\n@SQ\tSN:18\tLN:78077248\n@SQ\tSN:19\tLN:59128983\n@SQ\tSN:20\tLN:63025520\n@SQ\tSN:21\tLN:48129895\n@SQ\tSN:22\tLN:51304566\n@SQ\tSN:X\tLN:155270560\n@SQ\tSN:Y\tLN:59373566\n@PG\tID:bowtie2\tPN:bowtie2\tVN:2.0.0-beta6\n'
 RAW_REFS = b'\x19\x00\x00\x00\x03\x00\x00\x00MT\x00\xb9@\x00\x00\x02\x00\x00\x001\x00=C\xdb\x0e\x02\x00\x00\x002\x00\x8d\xed~\x0e\x02\x00\x00\x003\x00\x1e\x95\xcd\x0b\x02\x00\x00\x004\x00d\xc8d\x0b\x02\x00\x00\x005\x00<\x8c\xc8\n\x02\x00\x00\x006\x00;\x023\n\x02\x00\x00\x007\x00gC|\t\x02\x00\x00\x008\x00vV\xb9\x08\x02\x00\x00\x009\x00\xf7\xbej\x08\x03\x00\x00\x0010\x00\x9b\x18\x14\x08\x03\x00\x00\x0011\x004\t\x0c\x08\x03\x00\x00\x0012\x00\xf7j\xfa\x07\x03\x00\x00\x0013\x00VZ\xdd\x06\x03\x00\x00\x0014\x00$\x06f\x06\x03\x00\x00\x0015\x00@\x81\x1c\x06\x03\x00\x00\x0016\x00A\xb4b\x05\x03\x00\x00\x0017\x00\xca\xf0\xd6\x04\x03\x00\x00\x0018\x00@]\xa7\x04\x03\x00\x00\x0019\x00\x97<\x86\x03\x03\x00\x00\x0020\x00p\xb1\xc1\x03\x03\x00\x00\x0021\x00gg\xde\x02\x03\x00\x00\x0022\x00v\xd8\x0e\x03\x02\x00\x00\x00X\x00\xa0=A\t\x02\x00\x00\x00Y\x00\xfe\xf7\x89\x03'
 REFS = {'MT': 16569, '1': 249250621, '2': 243199373, '3': 198022430, '4': 191154276, '5': 180915260, '6': 171115067,
@@ -165,16 +167,29 @@ class test_main(unittest.TestCase):
 
     def test_get_AS(self):
         self.assertEqual(bam.get_AS(ALIGN0), 198)
+        self.assertEqual(bam.get_AS(b''), MIN32INT)
+        self.assertEqual(bam.get_AS(b'',no_tag=None), None)
+        self.assertRaises(ValueError,bam.get_AS,b'ASC\xc6ASC\xc6')
 
     def test_get_XS(self):
         self.assertEqual(bam.get_XS(ALIGN0), 126)
+        self.assertEqual(bam.get_XS(b''), MIN32INT)
+        self.assertEqual(bam.get_XS(b'',no_tag=None), None)
+        self.assertRaises(ValueError,bam.get_XS,b'XSC\xc6XSC\xc6')
 
     def test_get_ZS(self):
-        self.assertEqual(bam.get_ZS(ALIGN0), None)
+        self.assertEqual(bam.get_ZS(ALIGN0), MIN32INT)
+        self.assertEqual(bam.get_ZS(b''), MIN32INT)
+        self.assertEqual(bam.get_ZS(b'',no_tag=None), None)
+        self.assertRaises(ValueError,bam.get_ZS,b'ZSC\xc6ZSC\xc6')
         self.assertEqual(bam.get_ZS(b'ASC\xc6ZSC~XNC\x00XMC\x00XOC\x00XGC\x00NMC\x00MDZ99\x00YSC\xbdYTZCP\x00'),
                          126)
 
     def test_get_MD(self):
+        self.assertEqual(bam.get_MD(b''), None)
+        self.assertEqual(bam.get_MD(b'',no_tag='SpanishInquisition'),
+                         'SpanishInquisition')
+        self.assertRaises(ValueError,bam.get_MD,b'MDZ99\x00MDZ99\x00')
         self.assertEqual(bam.get_MD(ALIGN0), '99')
 
     def test_is_flag(self):
