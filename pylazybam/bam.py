@@ -10,13 +10,11 @@ Portability : POSIX
 """
 import struct
 from typing import BinaryIO, Generator, Tuple, Dict
-from pylazybam.bgzf import BgzfWriter as FileWriter
+from pylazybam.bgzf import BgzfWriter
 from pylazybam.decoders import *
 from pylazybam.tags import *
 
-
 # Parsing functions
-
 
 def get_ref_index(alignment: bytes) -> int:
     """
@@ -426,170 +424,9 @@ def get_raw_base_qual(alignment: bytes,
     end = start + len_sequence
     return alignment[start:end]
 
-
-class FileReader:
-    """A Pure Python Lazy Bam Parser Class
-
-    Parameters
-    ----------
-        ubam : BinaryIO
-            An binary (bytes) file or stream containing a valid uncompressed
-            bam file conforming to the specification.
-
-    Yields
-    ------
-        align : bytes
-            A byte string of a bam alignment entry in raw binary format
-
-    Attributes
-    ----------
-        header : str
-            The ASCII representation of the header
-
-        index_to_ref : Dict[int:str]
-            A dictionary mapping bam reference numeric identifiers to names
-
-        raw_header : bytes
-            The raw bytestring representing the bam header
-
-        raw_refs : bytes
-            The raw bytestring representing the reference sequences
-
-        refs : Dict[str:int]
-            A dictionary of reference_name keys with reference_length
-
-        ref_to_index : Dict[str:int]
-            A dictionary mapping reference names to the bam numeric identifier
-
-        sort_order : str
-            The value of the SO field indicating sort type. Value is as given in
-            the BAM file.
-            Should be one of 'unknown', 'unsorted', 'queryname' or 'coordinate'
-
-    Notes
-    -----
-        It is advisable not to call the private functions or operate directly
-        on the underlying file object.
-
-        The detailed specification for the BAM format can be found at
-        https://samtools.github.io/hts-specs/SAMv1.pdf
-
-    Example
-    -------
-        This class requires an uncompressed bam file as input.
-        For this example we will use gzip to decompress the test file included
-        as a resource in the package
-
-        >>> import gzip
-        >>> from pkg_resources import resource_stream
-        >>> ubam = gzip.open('/tests/data/paired_end_testdata_human.bam'))
-
-        A bam filereader object can then be created and headers inspected
-        >>> mybam = bam.FileReader(ubam)
-        >>> print(mybam.header)
-
-        The filereader object is an iterator and yields alignments in raw format
-        >>> align = next(mybam)
-
-        Alignments can be processed using functions from pylazybam.bam
-        >>> print(mybam.index_to_ref[get_ref_index(align)],
-        >>>       get_pos(align),
-        >>>       get_AS(align))
-
-    """
-
-    def __init__(self, ubam: BinaryIO):
-        """
-        """
-        self._ubam = ubam
-        self.magic = self._ubam.read(4)
-        if self.magic != b"BAM\x01":
-            raise ValueError(
-                (f"Incorrect start to uncompressed bam: {self.magic} "
-                "not b'BAM\x01'. Check the file has been decompressed "
-                "before being passed to this class")
-            )
-        self.raw_header, self.header = self._read_header()
-        self.raw_refs, self.refs = self._read_refs()
-        self.index_to_ref: Dict[int,str] = dict(zip(range(len(self.refs)),
-                                                    self.refs.keys()))
-        self.ref_to_index: Dict[str,int] = dict(zip(self.refs.keys(),
-                                                    range(len(self.refs))))
-        self.index_to_ref[-1] = "*"
-        self.sort_order = re.search(b'SO:[a-zA-Z]+',
-                                   self.raw_header)[0][3:].decode()
-        self.alignments: Generator[bytes, None, None] = self._get_alignments()
-
-    def __enter__(self):
-        """Return self for use in WITH statement."""
-        return self
-
-    def __exit__(self, type, value, traceback):
-        """Tidy up at end of WITH statement."""
-        self._ubam.close()
-
-    def close(self):
-        """Close input file"""
-        return self._ubam.close()
-
-    def _read_header(self) -> Tuple[bytes, str]:
-        """Utility function for reading bam file headers
-        Called by init to create self.raw_header and self.header"""
-        raw_header_length = self._ubam.read(4)
-        header_length = struct.unpack("<i", raw_header_length)[0]
-        raw_header = raw_header_length + self._ubam.read(header_length)
-        header = raw_header[4:].decode("latin-1")
-        return (raw_header, header)
-
-    def _read_refs(self) -> Tuple[bytes, Dict[str, int]]:
-        """Utility function for reading bam file headers
-        Called by init to create self.raw_refs and self.refs"""
-        ref_buffer = b""
-        refs = {}
-
-        raw_nref = self._ubam.read(4)
-        ref_buffer += raw_nref
-        self.n_ref = struct.unpack("<i", raw_nref)[0]
-        for i in range(self.n_ref):
-            raw_lname = self._ubam.read(4)
-            ref_buffer += raw_lname
-            l_name = struct.unpack("<i", raw_lname)[0]
-            raw_ref_name = self._ubam.read(l_name)
-            ref_buffer += raw_ref_name
-            ref_name = raw_ref_name[:-1].decode("utf-8")
-            raw_ref_length = self._ubam.read(4)
-            ref_buffer += raw_ref_length
-            ref_length = struct.unpack("<i", raw_ref_length)[0]
-            refs[ref_name] = ref_length
-        if self.n_ref != len(refs):
-            raise ValueError(f"Invalid header: should be {self.n_ref} "
-                             f"references but only found {len(refs)}"
-                             )
-        return (ref_buffer, refs)
-
-    def _get_alignments(self) -> Generator[bytes, None, None]:
-        """utility function to create an alignment generator"""
-        while self._ubam:
-            try:
-                raw_blocksize = self._ubam.read(4)
-                if not raw_blocksize:
-                    break
-                block_size = struct.unpack("<i", raw_blocksize)[0]
-                alignment = raw_blocksize + self._ubam.read(
-                    block_size
-                )  # add back size so alignment record intact
-                yield alignment
-            except ValueError:
-                if not self._ubam.read():
-                    break
-                else:
-                    raise
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        return next(self.alignments)
+class _FileBase:
+    def __init__(self):
+        pass
 
     def get_full_raw_header(self):
         """
@@ -603,10 +440,6 @@ class FileReader:
             block
         """
         self.update_header_length()
-        if self.n_ref != self.raw_refs.count(b'@SQ'):
-            raise ValueError(f"Invalid header: should be {self.n_ref} "
-                             f"references but only found {len(refs)}"
-                             )
         return self.magic + self.raw_header + self.raw_refs
 
     def update_header_length(self, raw_header=None):
@@ -709,4 +542,215 @@ class FileReader:
 
         See get_updated_header for Parameters and documentation
         """
-        self.raw_header = self.get_full_raw_header()
+        self.raw_header = self.get_updated_header(*args,**kwargs,
+                                                  raw_header=self.raw_header)
+        self.update_header_length()
+
+class FileReader(_FileBase):
+    """A Pure Python Lazy Bam Parser Class
+
+    Parameters
+    ----------
+        ubam : BinaryIO
+            An binary (bytes) file or stream containing a valid uncompressed
+            bam file conforming to the specification.
+
+    Yields
+    ------
+        align : bytes
+            A byte string of a bam alignment entry in raw binary format
+
+    Attributes
+    ----------
+        header : str
+            The ASCII representation of the header
+
+        index_to_ref : Dict[int:str]
+            A dictionary mapping bam reference numeric identifiers to names
+
+        raw_header : bytes
+            The raw bytestring representing the bam header
+
+        raw_refs : bytes
+            The raw bytestring representing the reference sequences
+
+        refs : Dict[str:int]
+            A dictionary of reference_name keys with reference_length
+
+        ref_to_index : Dict[str:int]
+            A dictionary mapping reference names to the bam numeric identifier
+
+        sort_order : str
+            The value of the SO field indicating sort type. Value is as given in
+            the BAM file.
+            Should be one of 'unknown', 'unsorted', 'queryname' or 'coordinate'
+
+    Notes
+    -----
+        It is advisable not to call the private functions or operate directly
+        on the underlying file object.
+
+        The detailed specification for the BAM format can be found at
+        https://samtools.github.io/hts-specs/SAMv1.pdf
+
+    Example
+    -------
+        This class requires an uncompressed bam file as input.
+        For this example we will use gzip to decompress the test file included
+        as a resource in the package
+
+        >>> import gzip
+        >>> from pkg_resources import resource_stream
+        >>> ubam = gzip.open('/tests/data/paired_end_testdata_human.bam'))
+
+        A bam filereader object can then be created and headers inspected
+        >>> mybam = bam.FileReader(ubam)
+        >>> print(mybam.header)
+
+        The filereader object is an iterator and yields alignments in raw format
+        >>> align = next(mybam)
+
+        Alignments can be processed using functions from pylazybam.bam
+        >>> print(mybam.index_to_ref[get_ref_index(align)],
+        >>>       get_pos(align),
+        >>>       get_AS(align))
+
+    """
+
+    def __init__(self, ubam: BinaryIO):
+        """
+        """
+        self._ubam = ubam
+        self.magic = self._ubam.read(4)
+        if self.magic != b"BAM\x01":
+            raise ValueError(
+                (f"Incorrect start to uncompressed bam: {self.magic} "
+                "not b'BAM\x01'. Check the file has been decompressed "
+                "before being passed to this class")
+            )
+        self.raw_header, self.header = self._read_header()
+        self.raw_refs, self.refs = self._read_refs()
+        self.index_to_ref: Dict[int,str] = dict(zip(range(len(self.refs)),
+                                                    self.refs.keys()))
+        self.ref_to_index: Dict[str,int] = dict(zip(self.refs.keys(),
+                                                    range(len(self.refs))))
+        self.index_to_ref[-1] = "*"
+        self.sort_order = re.search(b'SO:[a-zA-Z]+',
+                                   self.raw_header)[0][3:].decode()
+        self.alignments: Generator[bytes, None, None] = self._get_alignments()
+
+    def __enter__(self):
+        """Return self for use in WITH statement."""
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """Tidy up at end of WITH statement."""
+        self._ubam.close()
+
+    def close(self):
+        """Close input file"""
+        self._ubam.close()
+
+    def _read_header(self) -> Tuple[bytes, str]:
+        """Utility function for reading bam file headers
+        Called by init to create self.raw_header and self.header"""
+        raw_header_length = self._ubam.read(4)
+        header_length = struct.unpack("<i", raw_header_length)[0]
+        raw_header = raw_header_length + self._ubam.read(header_length)
+        header = raw_header[4:].decode("latin-1")
+        return (raw_header, header)
+
+    def _read_refs(self) -> Tuple[bytes, Dict[str, int]]:
+        """Utility function for reading bam file headers
+        Called by init to create self.raw_refs and self.refs"""
+        ref_buffer = b""
+        refs = {}
+
+        raw_nref = self._ubam.read(4)
+        ref_buffer += raw_nref
+        self.n_ref = struct.unpack("<i", raw_nref)[0]
+        for i in range(self.n_ref):
+            raw_lname = self._ubam.read(4)
+            ref_buffer += raw_lname
+            l_name = struct.unpack("<i", raw_lname)[0]
+            raw_ref_name = self._ubam.read(l_name)
+            ref_buffer += raw_ref_name
+            ref_name = raw_ref_name[:-1].decode("utf-8")
+            raw_ref_length = self._ubam.read(4)
+            ref_buffer += raw_ref_length
+            ref_length = struct.unpack("<i", raw_ref_length)[0]
+            refs[ref_name] = ref_length
+        if self.n_ref != len(refs):
+            raise ValueError(f"Invalid header: should be {self.n_ref} "
+                             f"references but only found {len(refs)}"
+                             )
+        return (ref_buffer, refs)
+
+    def _get_alignments(self) -> Generator[bytes, None, None]:
+        """utility function to create an alignment generator"""
+        while self._ubam:
+            try:
+                raw_blocksize = self._ubam.read(4)
+                if not raw_blocksize:
+                    break
+                block_size = struct.unpack("<i", raw_blocksize)[0]
+                alignment = raw_blocksize + self._ubam.read(
+                    block_size
+                )  # add back size so alignment record intact
+                yield alignment
+            except ValueError:
+                if not self._ubam.read():
+                    break
+                else:
+                    raise
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return next(self.alignments)
+
+
+class FileWriter(_FileBase):
+    def __init__(self,
+                 file,
+                 raw_header = None,
+                 raw_refs = None,
+                 mode = 'wb',
+                 compresslevel = 6,
+                 ):
+        if not hasattr(file, 'write'):
+            self.bgzf_file = BgzfWriter(filename=file,
+                                        mode=mode,
+                                        fileobj=None,
+                                        compresslevel=compresslevel,
+                                        )
+        else:
+            self.bgzf_file = BgzfWriter(filename=None,
+                                        fileobj=file,
+                                        compresslevel=compresslevel,
+                                        )
+
+        print(locals())
+        print(self.bgzf_file)
+        self.magic = b"BAM\x01"
+        self.raw_header = raw_header
+        self.raw_refs = raw_refs
+
+    def write(self, *args, **kwargs):
+        return self.bgzf_file.write(*args,**kwargs)
+
+    def close(self, *args, **kwargs):
+        return self.bgzf_file.close(*args,**kwargs)
+
+    def write_header(self,
+                     raw_header = None,
+                     raw_refs = None):
+        if not raw_header:
+            raw_header = self.raw_header
+
+        if not raw_refs:
+            raw_refs = self.raw_refs
+
+        self.update_header_length()
+        self.write(self.magic + self.raw_header + self.raw_refs)
