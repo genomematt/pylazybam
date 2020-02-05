@@ -9,6 +9,7 @@ Maintainer  : matthew.wakefield@unimelb.edu.au
 Portability : POSIX
 """
 import struct
+from pathlib import Path
 from typing import BinaryIO, Generator, Tuple, Dict
 from pylazybam.bgzf import BgzfWriter
 from pylazybam.decoders import *
@@ -720,16 +721,18 @@ class FileWriter(_FileBase):
                  compresslevel = 6,
                  ):
         if not hasattr(file, 'write'):
-            self.bgzf_file = BgzfWriter(filename=file,
+            self.bgzf_file = BgzfWriter(filename=Path(file),
                                         mode=mode,
                                         fileobj=None,
                                         compresslevel=compresslevel,
                                         )
+            self.name = str(Path(file)) #safe for Path or str
         else:
             self.bgzf_file = BgzfWriter(filename=None,
                                         fileobj=file,
                                         compresslevel=compresslevel,
                                         )
+            self.name = file.name
         self.header_written = False
         self.magic = b"BAM\x01"
         self.raw_header = raw_header

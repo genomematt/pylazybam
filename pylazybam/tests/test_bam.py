@@ -221,3 +221,37 @@ class test_main(unittest.TestCase):
                 self.assertEqual(align,align2)
         except StopIteration:
             pass
+
+    def test_FileWriter(self):
+        #construct with object
+        outfile = NamedTemporaryFile(delete=True)
+        out_bam = bam.FileWriter(outfile)
+        self.assertEqual(out_bam.name,outfile.name)
+        #construct with name
+        outfile = NamedTemporaryFile(delete=False)
+        outfile.close()
+        out_bam = bam.FileWriter(outfile.name)
+        self.assertEqual(out_bam.name, outfile.name)
+        out_bam.raw_header = RAW_HEADER
+        out_bam.raw_refs = RAW_REFS
+        self.assertEqual(out_bam.get_full_raw_header(),
+                         b'BAM\x01' + RAW_HEADER + RAW_REFS,
+                         )
+        out_bam.raw_header = RAW_HEADER + b"@CO\tComment\n"
+        self.assertEqual(out_bam.get_full_raw_header()[8:],
+                 RAW_HEADER[4:] + b"@CO\tComment\n" + RAW_REFS,
+                 )
+        self.assertEqual(len(out_bam.raw_header[4:]),
+                         struct.unpack('<i',out_bam.raw_header[:4])[0])
+
+        out_bam.update_header(id = 'pylazybam',
+                              program = 'pylazybam',
+                              version = '0.0.0',
+                              description= 'testing123')
+        self.assertEqual(out_bam.raw_header[4:],
+                         (RAW_HEADER[4:]
+                          + b'@PG\tID:pylazybam\tPN:pylazybam\tVN:0.0.0\t'
+                          + b'PP:bowtie2\tDS:testing123\n@CO\tComment\n'
+                          )
+                         )
+
