@@ -730,9 +730,7 @@ class FileWriter(_FileBase):
                                         fileobj=file,
                                         compresslevel=compresslevel,
                                         )
-
-        print(locals())
-        print(self.bgzf_file)
+        self.header_written = False
         self.magic = b"BAM\x01"
         self.raw_header = raw_header
         self.raw_refs = raw_refs
@@ -746,6 +744,9 @@ class FileWriter(_FileBase):
     def write_header(self,
                      raw_header = None,
                      raw_refs = None):
+        if self.header_written:
+            raise RuntimeError('Header has already been written to file')
+
         if not raw_header:
             raw_header = self.raw_header
 
@@ -754,3 +755,19 @@ class FileWriter(_FileBase):
 
         self.update_header_length()
         self.write(self.magic + self.raw_header + self.raw_refs)
+        self.header_written = True
+
+    def __enter__(self):
+        """Return self for use in WITH statement."""
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """Tidy up at end of WITH statement."""
+        self.bgzf_file.close()
+
+    def tell(self):
+        return self.bgzf_file.tell()
+
+    def seekable(self):
+        return False
+
