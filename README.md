@@ -91,3 +91,9 @@ Citing pylazybam
 
 pylazybam is in early development and does not yet have a publication. Please cite the github repository.
 Each release will have a Zenodo DOI identifier that can be cited.
+
+Acknowledgements
+----------------
+Pylazybam utilizes the excellent bgzf implementation from BioPython written by Peter Cock [@peterjc](https://github.com/peterjc). The slightly modified version is included in this package under the BSD variant of the bgzf codes licensing (this is the same license as pylazybam). The original version of this code can be found [here](https://github.com/biopython/biopython/blob/master/Bio/bgzf.py)
+
+Thanks to Alan Rubin [@afrubin](https://github.com/afrubin) and Tony Papenfuss [@papenfuss](https://github.com/papenfuss) for helpful discussions and code review
