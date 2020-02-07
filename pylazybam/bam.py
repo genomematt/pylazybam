@@ -638,6 +638,10 @@ class FileReader(_FileBase):
         self.index_to_ref[-1] = "*"
         self.sort_order = re.search(b'SO:[a-zA-Z]+',
                                    self.raw_header)[0][3:].decode()
+        if self._ubam.seekable():
+            self._start_of_alignments = self._ubam.tell()
+        else:
+            self._start_of_alignments = None
         self.alignments: Generator[bytes, None, None] = self._get_alignments()
 
     def __enter__(self):
@@ -710,6 +714,13 @@ class FileReader(_FileBase):
 
     def __next__(self):
         return next(self.alignments)
+
+    def reset_alignments(self):
+        """Reset the file pointer to the beginning of the alignment block"""
+        if self._start_of_alignments:
+            self._ubam.seek(self._start_of_alignments)
+        else:
+            raise NotImplementedError('Seek is not implemented for this file')
 
 
 class FileWriter(_FileBase):
