@@ -70,7 +70,8 @@ For more information on available functions and documentation
     from pylazybam import bam
     help(bam)
  
-Examples of how to use pylazybam can be found in [example_usage.ipynb](example_usage.ipynb)
+Examples of how to use pylazybam can be found in [example_usage.ipynb](example_usage.ipynb) and a brief example of using
+from within R with [reticulate](https://rstudio.github.io/reticulate/) in [reticulate_example.ipynb](reticulate_example.ipynb)
 
 Contributing to pylazybam
 =========================
