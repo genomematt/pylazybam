@@ -42,6 +42,9 @@ REF_TO_INDEX = {'MT': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
 ALIGN0 = b'\x12\x01\x00\x00\x0c\x00\x00\x00eB\xf0\x07(&\n2\x02\x00S\x00d\x00\x00\x00\x0c\x00\x00\x00\x1eB\xf0\x07S\xff\xff\xffHWI-ST960:96:COTO3ACXX:3:1101:1220:2089\x000\x06\x00\x00\x14\x00\x00\x00HB\x18"$H\x14\x82"\x14(\x12\x88\x14AD(AD!D\x14\x11\x82B\x88A\x12"\x84AD!\x11D\x88B\x14\x84\x14"AA\x82\x12\x12!(\x12\x1f#"##!\x1f####""!!\x1e##$$$##$"#"%%\'\'\'\'\')((&\')))))))(\'(()((\'#!))))))))((()))(&\'\'))))())()(&))(\'\'%%\'%####\x1c\x10\x02ASC\xc6XSC~XNC\x00XMC\x00XOC\x00XGC\x00NMC\x00MDZ99\x00YSC\xbdYTZCP\x00'
 # HWI-ST960:96:COTO3ACXX:3:1101:1220:2089 83      12      133186150       38      99M1S   =       133186079       -173    GTGCATCCCGGTAGTCCCAGCTACTTAGGAGGCTGAGGCAGGAGAATCGCTTGAACCCTGGAGGCAAAGGTTGCAGTGAGCCGAGATCACACCACTACAN    DCDDB@DDDDCCBB?DDEEEDDECDCFFHHHHHJIIGHJJJJJJJIHIIJIIHDBJJJJJJJJIIIJJJIGHHJJJJIJJIJIGJJIHHFFHFDDDD=1#    AS:i:198        XS:i:126        XN:i:0  XM:i:0  XO:i:0  XG:i:0  NM:i:0  MD:Z:99 YS:i:189        YT:Z:CP
 ALIGN42 = b'\xe4\x00\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff(\x00H\x12\x00\x00M\x00d\x00\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff\x00\x00\x00\x00HWI-ST960:96:COTO3ACXX:3:1101:1294:2176\x00\x81\x88\x11((\x14D\x14\x11!\x11\x14\x11\x11\x81\x12\x81A\x14!\x11\x11A\x14\x18!\x14B(\x14B"\x11H\x82\x88A\x12\x88\x88\x14\x82\x82\x18A"\x82\x84\x81\x81"""%%%%%\'\'\'\'\')\'(\'()))))(\'()))))))))()))())))))))))))())()(())()))\'\'$\'&\'%%%$!#$$$$$$#$#$$####"#######YTZUP\x00'
+TAGS = b'SAZchr12,82544431,+,102M48S,60,3;\x00XAZchr12,+82544561,122S28M,0;\x00MCZ150M\x00PGZMarkDuplicates\x00ASc\x1eXSc\x1cMDZ0G30\x00NMI\x01\x00\x00\x00RGZNA12778_CTCACCAA-CTAGGCAA_HCKWTDSXX_L001\x00'
+
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -220,6 +223,14 @@ class test_main(unittest.TestCase):
                           *(b'MDZ99\x00MDZ99\x00',b'MD'))
         self.assertEqual(bam.get_str_tag(ALIGN0,b'MD'), '99')
         self.assertRaises(ValueError,bam.get_str_tag, *(b'',b''))
+        self.assertEqual(bam.get_str_tag(TAGS,b'SA'),
+                         'chr12,82544431,+,102M48S,60,3;')
+        self.assertEqual(bam.get_str_tag(TAGS,b'XA'),
+                         'chr12,+82544561,122S28M,0;')
+        self.assertEqual(bam.get_str_tag(TAGS,b'RG'),
+                         'NA12778_CTCACCAA-CTAGGCAA_HCKWTDSXX_L001')
+        self.assertEqual(bam.get_str_tag(TAGS,b'PG'),
+                         'MarkDuplicates')
 
     def test_is_flag(self):
         self.assertTrue(bam.is_flag(ALIGN0,bam.FLAGS['forward']))

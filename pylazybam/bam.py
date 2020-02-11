@@ -444,6 +444,21 @@ class _FileBase:
         return self.magic + self.raw_header + self.raw_refs
 
     def update_header_length(self, raw_header=None):
+        """
+        Update the length of the SAM format text component of the header
+
+        Parameters
+        ----------
+        raw_header : bytes
+            optional raw SAM text header as bytes to process
+            Default self.raw_header
+
+        Returns
+        -------
+        bytes
+            returns the length corrected raw header if a raw header is provided
+
+        """
         inplace = False
         if not raw_header:
             inplace = True
@@ -619,8 +634,6 @@ class FileReader(_FileBase):
     """
 
     def __init__(self, ubam: BinaryIO):
-        """
-        """
         self._ubam = ubam
         self.magic = self._ubam.read(4)
         if self.magic != b"BAM\x01":
@@ -743,15 +756,45 @@ class FileWriter(_FileBase):
         self.raw_header = raw_header
         self.raw_refs = raw_refs
 
-    def write(self, *args, **kwargs):
-        return self.bgzf_file.write(*args,**kwargs)
+    def write(self, data):
+        """
+        Write output to the BAM file.
+        Data is buffered by the underlying bgzf method
+
+        Parameters
+        ----------
+        data : bytes
+            The data to be written to the BAM file
+        """
+        return self.bgzf_file.write(data)
 
     def close(self, *args, **kwargs):
+        """
+        Flush and write any data to the BAM file before finalizing and closing
+        """
         return self.bgzf_file.close(*args,**kwargs)
 
     def write_header(self,
                      raw_header = None,
                      raw_refs = None):
+        """
+        Write the header information to the BAM file
+
+        Parameters
+        ----------
+        raw_header : bytes
+            A raw byte format header containing the standard SAM format header
+            Default : self.raw_header
+        raw_refs
+            A raw bytestring containing the reference sequence header data
+            Default : self.raw_refs
+
+        Raises
+        -------
+        RuntimeError
+            Raises a runtime error if header information already written
+
+        """
         if self.header_written:
             raise RuntimeError('Header has already been written to file')
 
@@ -774,8 +817,10 @@ class FileWriter(_FileBase):
         self.close()
 
     def tell(self):
+        """Return the current location of the pointer in the file"""
         return self.bgzf_file.tell()
 
     def seekable(self):
+        """Return the seek state of the file"""
         return False
 
