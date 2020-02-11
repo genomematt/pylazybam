@@ -16,11 +16,11 @@ matrix:
 install:
   - pip3 install .
 before_script:
-  - pip3 install python-coveralls
   - pip3 install coverage
+  - pip3 install coveralls
   - if ! $NO_MYPY; then pip3 install mypy; fi
 script:
-  - coverage run --source pylazybam.bam --omit pylazybam/tests/*,pylazybam/bgzf.py -m pylazybam.tests.test_all
+  - coverage run --source pylazybam.bam,pylazybam.tags,pylazybam.decoders --omit pylazybam/tests/*,pylazybam/bgzf.py -m pylazybam.tests.test_all
   - if ! $NO_MYPY; then mypy -m pylazybam.bam ; fi
 after_success:
   - coverage report -m
