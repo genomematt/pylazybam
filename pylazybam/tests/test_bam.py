@@ -220,6 +220,7 @@ class test_main(unittest.TestCase):
             out_bam.raw_header = the_bam.raw_header
             out_bam.raw_refs = the_bam.raw_refs
             out_bam.write_header()
+            self.assertRaises(RuntimeError,out_bam.write_header,None)
             for align in the_bam:
                 out_bam.write(align)
         # parse the new temporary file

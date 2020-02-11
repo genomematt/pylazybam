@@ -640,7 +640,7 @@ class FileReader(_FileBase):
                                    self.raw_header)[0][3:].decode()
         if self._ubam.seekable():
             self._start_of_alignments = self._ubam.tell()
-        else:
+        else: #pragma: no cover
             self._start_of_alignments = None
         self.alignments: Generator[bytes, None, None] = self._get_alignments()
 
@@ -713,7 +713,7 @@ class FileReader(_FileBase):
         """Reset the file pointer to the beginning of the alignment block"""
         if self._start_of_alignments:
             self._ubam.seek(self._start_of_alignments)
-        else:
+        else: #pragma: no cover
             raise NotImplementedError('Seek is not implemented for this file')
 
 
@@ -771,7 +771,7 @@ class FileWriter(_FileBase):
 
     def __exit__(self, type, value, traceback):
         """Tidy up at end of WITH statement."""
-        self.bgzf_file.close()
+        self.close()
 
     def tell(self):
         return self.bgzf_file.tell()
