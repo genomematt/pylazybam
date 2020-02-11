@@ -204,6 +204,23 @@ class test_main(unittest.TestCase):
         self.assertRaises(ValueError,bam.get_MD,b'MDZ99\x00MDZ99\x00')
         self.assertEqual(bam.get_MD(ALIGN0), '99')
 
+    def test_get_int_tag(self):
+        self.assertEqual(bam.get_int_tag(ALIGN0, b"AS"), 198)
+        self.assertEqual(bam.get_int_tag(b'', b"AS"), MIN32INT)
+        self.assertEqual(bam.get_int_tag(b'', b"AS", no_tag=None), None)
+        self.assertRaises(ValueError, bam.get_int_tag,
+                          *(b'ASC\xc6ASC\xc6', b"AS"))
+        self.assertRaises(ValueError,bam.get_int_tag, *(b'',b''))
+
+    def test_get_str_tag(self):
+        self.assertEqual(bam.get_str_tag(b'',b'MD'), None)
+        self.assertEqual(bam.get_str_tag(b'',b'MD',no_tag='SpanishInquisition'),
+                         'SpanishInquisition')
+        self.assertRaises(ValueError,bam.get_str_tag,
+                          *(b'MDZ99\x00MDZ99\x00',b'MD'))
+        self.assertEqual(bam.get_str_tag(ALIGN0,b'MD'), '99')
+        self.assertRaises(ValueError,bam.get_str_tag, *(b'',b''))
+
     def test_is_flag(self):
         self.assertTrue(bam.is_flag(ALIGN0,bam.FLAGS['forward']))
 
