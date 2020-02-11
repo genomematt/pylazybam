@@ -1,24 +1,25 @@
 [![Build Status](https://travis-ci.org/genomematt/pylazybam.svg?branch=master)](https://travis-ci.org/genomematt/pylazybam)
 [![Coverage Status](https://coveralls.io/repos/genomematt/pylazybam/badge.svg)](https://coveralls.io/r/genomematt/pylazybam)
+[![DOI](https://zenodo.org/badge/189527217.svg)](https://zenodo.org/badge/latestdoi/189527217)
 
 Pylazybam
 =========
 
 Pylazybam is a pure python library for reading minimal amounts of information from a BAM format mapped sequence
-alignment file. It is intended for uses such as filtering reads where the information within the alignment entry is not
-sufficient to make the filtering decision.
+alignment file. It is intended for uses such as filtering reads where the information within the single alignment entry 
+is not sufficient to make the filtering decision.
 
 For simple filtering you should consider other approaches such as samtools or sambamba. If editing of the data is
 required htslib based solutions, such as pysam should also be considered.
 
-Pylazybam is a minimalist architecture consisting of classes for reading and writing bam files, and a set of functions 
-that can be used on alignments in binary bitestring format to extract information. In filtering applications decisions 
+Pylazybam is a minimalist architecture consisting of classes for reading and writing BAM files, and a set of functions 
+that can be used on alignments in binary bytestring format to extract information. In filtering applications decisions 
 on read alignment output are made on the processed data, and the raw unmodified BAM alignment is written to the output 
 BAM file. This minimizes the decoding and encoding work done by the code, thus the pylazybam name. 
 
 Installation
 ============
-Pylazybam requires python 3.6 or higher and is tested on linux and MacOS with CPython and pypy3.
+Pylazybam requires Python 3.6 or higher and is tested on Linux and MacOS with CPython and PyPy3.
 
 <!-- Installing from the Python Package Index with pip is the easiest option:
 
@@ -90,11 +91,11 @@ compatible with python versions >= 3.6 and contain only pure python code.
 Citing pylazybam
 ================
 
-pylazybam is in early development and does not yet have a publication. Please cite the github repository.
-Each release will have a Zenodo DOI identifier that can be cited.
+Pylazybam is in early development and does not yet have a publication. Please cite the github repository.
+Each release will have a Zenodo DOI identifier that can be cited. The current DOI for v0.1.0 is [![DOI](https://zenodo.org/badge/189527217.svg)](https://zenodo.org/badge/latestdoi/189527217)
 
 Acknowledgements
 ----------------
-Pylazybam utilizes the excellent bgzf implementation from BioPython written by Peter Cock [@peterjc](https://github.com/peterjc). The slightly modified version is included in this package under the BSD variant of the bgzf codes licensing (this is the same license as pylazybam). The original version of this code can be found [here](https://github.com/biopython/biopython/blob/master/Bio/bgzf.py)
+Pylazybam utilizes the excellent bgzf implementation from BioPython written by Peter Cock [@peterjc](https://github.com/peterjc). The slightly modified version is included in this package under the BSD variant of the bgzf codes licensing (this is the same license as pylazybam). The original version of the bgzf code can be found [here](https://github.com/biopython/biopython/blob/master/Bio/bgzf.py)
 
 Thanks to Alan Rubin [@afrubin](https://github.com/afrubin) and Tony Papenfuss [@papenfuss](https://github.com/papenfuss) for helpful discussions and code review
