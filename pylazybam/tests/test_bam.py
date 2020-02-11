@@ -61,6 +61,15 @@ class test_main(unittest.TestCase):
         self.assertEqual(the_bam.index_to_ref, INDEX_TO_REF)
         self.assertEqual(the_bam.ref_to_index, REF_TO_INDEX)
         self.assertEqual(the_bam.sort_order, 'unsorted')
+        the_bam.close()
+        test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')
+        with bam.FileReader(gzip.open(test_bam)) as the_bam:
+            self.assertEqual(the_bam.header, HEADER)
+            first_read = next(the_bam)
+            the_bam.reset_alignments()
+            self.assertEqual(first_read,next(the_bam))
+        self.assertRaises(ValueError, bam.FileReader, test_bam)
+
 
     def test_update_header_length(self):
         test_bam = resource_stream(__name__, 'data/paired_end_testdata_human.bam')
@@ -80,10 +89,12 @@ class test_main(unittest.TestCase):
         the_bam.update_header_length()
         updated_header = the_bam.get_updated_header(id='test',
                                          program='test',
-                                         version='88.88.8')
+                                         version='88.88.8',
+                                         command="--argumentative")
         self.assertEqual(updated_header[4:], #skip 4 bytes as len changed
                          (RAW_HEADER[4:]
-                         + b'@PG\tID:test\tPN:test\tVN:88.88.8\tPP:bowtie2\n'
+                         + b'@PG\tID:test\tPN:test\tVN:88.88.8\tPP:bowtie2\t'
+                         + b'CL:--argumentative\n'
                          + b'@CO\tThis is an extra comment\n')
                          )
 
@@ -96,6 +107,7 @@ class test_main(unittest.TestCase):
         self.assertEqual(next(the_bam), ALIGN42)
         for align in the_bam:
             pass
+
 
     def test_get_ref_index(self):
         self.assertEqual(bam.get_ref_index(ALIGN0), 12)
@@ -204,13 +216,12 @@ class test_main(unittest.TestCase):
         the_bam = bam.FileReader(gzip.open(test_bam))
         out_file = NamedTemporaryFile(delete=False)
         out_file_name = out_file.name
-        out_bam = bam.FileWriter(out_file_name)
-        out_bam.write(the_bam.magic)
-        out_bam.write(the_bam.raw_header)
-        out_bam.write(the_bam.raw_refs)
-        for align in the_bam:
-            out_bam.write(align)
-        out_bam.close()
+        with bam.FileWriter(out_file_name) as out_bam:
+            out_bam.raw_header = the_bam.raw_header
+            out_bam.raw_refs = the_bam.raw_refs
+            out_bam.write_header()
+            for align in the_bam:
+                out_bam.write(align)
         # parse the new temporary file
         new_bam = bam.FileReader(gzip.open(out_file_name))
         self.assertEqual(the_bam.header,new_bam.header)
@@ -221,6 +232,11 @@ class test_main(unittest.TestCase):
                 self.assertEqual(align,align2)
         except StopIteration:
             pass
+
+    def test_FileBase(selfs):
+        the_filebase = bam._FileBase()
+        # methods tested in classes that inherit
+
 
     def test_FileWriter(self):
         #construct with object
@@ -254,4 +270,9 @@ class test_main(unittest.TestCase):
                           + b'PP:bowtie2\tDS:testing123\n@CO\tComment\n'
                           )
                          )
+        self.assertFalse(out_bam.seekable())
+        point = out_bam.tell()
+        out_bam.write(ALIGN0)
+        self.assertLess(point, out_bam.tell())
+
 

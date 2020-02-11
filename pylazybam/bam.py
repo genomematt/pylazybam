@@ -685,7 +685,7 @@ class FileReader(_FileBase):
             ref_buffer += raw_ref_length
             ref_length = struct.unpack("<i", raw_ref_length)[0]
             refs[ref_name] = ref_length
-        if self.n_ref != len(refs):
+        if self.n_ref != len(refs): #pragma: no cover
             raise ValueError(f"Invalid header: should be {self.n_ref} "
                              f"references but only found {len(refs)}"
                              )
@@ -694,20 +694,14 @@ class FileReader(_FileBase):
     def _get_alignments(self) -> Generator[bytes, None, None]:
         """utility function to create an alignment generator"""
         while self._ubam:
-            try:
-                raw_blocksize = self._ubam.read(4)
-                if not raw_blocksize:
-                    break
-                block_size = struct.unpack("<i", raw_blocksize)[0]
-                alignment = raw_blocksize + self._ubam.read(
-                    block_size
-                )  # add back size so alignment record intact
-                yield alignment
-            except ValueError:
-                if not self._ubam.read():
-                    break
-                else:
-                    raise
+            raw_blocksize = self._ubam.read(4)
+            if not raw_blocksize:
+                break
+            block_size = struct.unpack("<i", raw_blocksize)[0]
+            alignment = raw_blocksize + self._ubam.read(
+                block_size
+            )  # add back size so alignment record intact
+            yield alignment
 
     def __iter__(self):
         return self
