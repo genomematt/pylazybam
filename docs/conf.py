@@ -35,8 +35,8 @@ extensions = ["sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.doctest",
-    'sphinx.ext.autodoc.typehints',
-    'sphinx.ext.githubpages'
+    #'sphinx.ext.autodoc.typehints',
+    #'sphinx.ext.githubpages'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
