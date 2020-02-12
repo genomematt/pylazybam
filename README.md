@@ -76,6 +76,8 @@ For more information on available functions and documentation
 Examples of how to use pylazybam can be found in [example_usage.ipynb](example_usage.ipynb) and a brief example of using
 from within R with [reticulate](https://rstudio.github.io/reticulate/) in [reticulate_example.ipynb](reticulate_example.ipynb)
 
+Documentation is also available on [pylazybam.readthedocs.io](https://pylazybam.readthedocs.io/en/latest/pylazybam.html#module-pylazybam.bam)
+
 Contributing to pylazybam
 =========================
 Pylazybam is licensed under the BSD three clause license.  You are free to fork this repository under the terms of that
