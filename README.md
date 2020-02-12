@@ -2,6 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/genomematt/pylazybam/badge.svg)](https://coveralls.io/r/genomematt/pylazybam)
 [![DOI](https://zenodo.org/badge/189527217.svg)](https://zenodo.org/badge/latestdoi/189527217)
 [![ReadTheDocs](https://pylazybam.readthedocs.io/en/latest/?badge=latest)](https://pylazybam.readthedocs.io/en/latest/)
+[![PyPI](https://img.shields.io/pypi/v/pylazybam.svg)](https://pypi.python.org/pypi/pylazybam/)
 
 Pylazybam
 =========
@@ -22,10 +23,10 @@ Installation
 ============
 Pylazybam requires Python 3.6 or higher and is tested on Linux and MacOS with CPython and PyPy3.
 
-<!-- Installing from the Python Package Index with pip is the easiest option:
+Installing from the Python Package Index with pip is the easiest option:
 
     pip3 install pylazybam
--->    
+    
 To install from the github repository
 
     pip install git+git://github.com/genomematt/pylazybam.git
