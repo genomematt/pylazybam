@@ -144,6 +144,7 @@ def get_flag(alignment: bytes) -> int:
     -----
     Flag values can be tested on raw BAM alignment with pylazybam.bam.is_flag()
     Common flag values are available from pylazybam.bam.FLAGS
+
     >>> print(pylazybam.bam.FLAGS)
     {"paired": 0x1,
     "aligned": 0x2,
@@ -620,13 +621,16 @@ class FileReader(_FileBase):
         >>> ubam = gzip.open('/tests/data/paired_end_testdata_human.bam'))
 
         A bam filereader object can then be created and headers inspected
+
         >>> mybam = bam.FileReader(ubam)
         >>> print(mybam.header)
 
         The filereader object is an iterator and yields alignments in raw format
+
         >>> align = next(mybam)
 
         Alignments can be processed using functions from pylazybam.bam
+
         >>> print(mybam.index_to_ref[get_ref_index(align)],
         >>>       get_pos(align),
         >>>       get_AS(align))

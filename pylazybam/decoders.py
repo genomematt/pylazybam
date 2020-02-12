@@ -111,6 +111,7 @@ def is_flag(alignment: bytes, flag: int) -> bool:
     Notes
     -----
     Common flag values are available from pylazybam.bam.FLAGS
+
     >>> print(pylazybam.bam.FLAGS)
     {"paired": 0x1,
     "aligned": 0x2,

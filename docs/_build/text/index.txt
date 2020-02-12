@@ -1,0 +1,12 @@
+Pylazybam - A pure python BAM parser
+************************************
+
+
+Indices and tables
+******************
+
+* Index
+
+* Module Index
+
+* Search Page
