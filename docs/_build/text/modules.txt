@@ -1,0 +1,10 @@
+pylazybam
+*********
+
+* pylazybam
+
+  * pylazybam.bam module
+
+  * pylazybam.decoders module
+
+  * pylazybam.tags module

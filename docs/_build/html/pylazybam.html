@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pylazybam &#8212; pylazybam 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pylazybam 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pylazybam">
+<h1>pylazybam<a class="headerlink" href="#pylazybam" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pylazybam-bam-module">
+<h2>pylazybam.bam module<a class="headerlink" href="#pylazybam-bam-module" title="Permalink to this headline">¶</a></h2>
+<p>A Module for reading and writing BAM format files</p>
+<p>Note that for convenience the functions from pylazybam.decoders and pylazybam.tags
+are also imported into the pylazybam.bam namespace</p>
+<span class="target" id="module-pylazybam.bam"></span><dl class="class">
+<dt id="pylazybam.bam.FileReader">
+<em class="property">class </em><code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">ubam: BinaryIO</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pylazybam.bam._FileBase</span></code></p>
+<p>A Pure Python Lazy Bam Parser Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ubam</strong> (<em>BinaryIO</em>) – An binary (bytes) file or stream containing a valid uncompressed
+bam file conforming to the specification.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><strong>align</strong> (<em>bytes</em>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.header">
+<code class="sig-name descname">header</code><a class="headerlink" href="#pylazybam.bam.FileReader.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ASCII representation of the header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.index_to_ref">
+<code class="sig-name descname">index_to_ref</code><a class="headerlink" href="#pylazybam.bam.FileReader.index_to_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary mapping bam reference numeric identifiers to names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict[int:str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.raw_header">
+<code class="sig-name descname">raw_header</code><a class="headerlink" href="#pylazybam.bam.FileReader.raw_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw bytestring representing the bam header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.raw_refs">
+<code class="sig-name descname">raw_refs</code><a class="headerlink" href="#pylazybam.bam.FileReader.raw_refs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw bytestring representing the reference sequences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.refs">
+<code class="sig-name descname">refs</code><a class="headerlink" href="#pylazybam.bam.FileReader.refs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of reference_name keys with reference_length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict[str:int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.ref_to_index">
+<code class="sig-name descname">ref_to_index</code><a class="headerlink" href="#pylazybam.bam.FileReader.ref_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary mapping reference names to the bam numeric identifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict[str:int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pylazybam.bam.FileReader.sort_order">
+<code class="sig-name descname">sort_order</code><a class="headerlink" href="#pylazybam.bam.FileReader.sort_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of the SO field indicating sort type. Value is as given in
+the BAM file.
+Should be one of ‘unknown’, ‘unsorted’, ‘queryname’ or ‘coordinate’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>It is advisable not to call the private functions or operate directly
+on the underlying file object.</p>
+<p>The detailed specification for the BAM format can be found at
+<a class="reference external" href="https://samtools.github.io/hts-specs/SAMv1.pdf">https://samtools.github.io/hts-specs/SAMv1.pdf</a></p>
+<p class="rubric">Example</p>
+<p>This class requires an uncompressed bam file as input.
+For this example we will use gzip to decompress the test file included
+as a resource in the package</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gzip</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">resource_stream</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ubam</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/tests/data/paired_end_testdata_human.bam&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>A bam filereader object can then be created and headers inspected</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mybam</span> <span class="o">=</span> <span class="n">bam</span><span class="o">.</span><span class="n">FileReader</span><span class="p">(</span><span class="n">ubam</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mybam</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The filereader object is an iterator and yields alignments in raw format</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">mybam</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alignments can be processed using functions from pylazybam.bam</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mybam</span><span class="o">.</span><span class="n">index_to_ref</span><span class="p">[</span><span class="n">get_ref_index</span><span class="p">(</span><span class="n">align</span><span class="p">)],</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="n">get_pos</span><span class="p">(</span><span class="n">align</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="n">get_AS</span><span class="p">(</span><span class="n">align</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close input file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.get_full_raw_header">
+<code class="sig-name descname">get_full_raw_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.get_full_raw_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a complete BAM header with all elements suitable for writing to a
+bam.FileWriter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The complete raw BAM header including the BAM magic and reference
+block</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.get_updated_header">
+<code class="sig-name descname">get_updated_header</code><span class="sig-paren">(</span><em class="sig-param">id: str</em>, <em class="sig-param">program: str</em>, <em class="sig-param">version: str</em>, <em class="sig-param">command: str = None</em>, <em class="sig-param">description: str = None</em>, <em class="sig-param">raw_header=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.get_updated_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a modified version of the header with additional program information
+in a &#64;PG BAM header suitable for writing to a new output file.</p>
+<p>Does not include the BAM magic or the BAM reference block.</p>
+<p>Note that the header should be written after self.magic and before
+self.raw_refs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – a unique identifier of this action of the program on the BAM</p></li>
+<li><p><strong>program</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the program used to process the BAM</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – version number of the program used to process the BAM</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the command and arguments to the program used to process the BAM</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – optional description</p></li>
+<li><p><strong>raw_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a raw BAM formatted header without BAM magic or REF block
+used for recursive modification to add multiple</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Parameters will be utf-8 encoded
+If there are existing &#64;PG records the last record will be used as PP</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#pylazybam.bam.FileReader.update_header" title="pylazybam.bam.FileReader.update_header"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update_header()</span></code></a>, <a class="reference internal" href="#pylazybam.bam.FileReader.get_full_raw_header" title="pylazybam.bam.FileReader.get_full_raw_header"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_full_raw_header()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.reset_alignments">
+<code class="sig-name descname">reset_alignments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.reset_alignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the file pointer to the beginning of the alignment block</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.update_header">
+<code class="sig-name descname">update_header</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.update_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use get_updated_header to update self.raw_header inplace</p>
+<p>See get_updated_header for Parameters and documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileReader.update_header_length">
+<code class="sig-name descname">update_header_length</code><span class="sig-paren">(</span><em class="sig-param">raw_header=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileReader.update_header_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the length of the SAM format text component of the header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – optional raw SAM text header as bytes to process
+Default self.raw_header</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the length corrected raw header if a raw header is provided</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pylazybam.bam.FileWriter">
+<em class="property">class </em><code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">FileWriter</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">raw_header=None</em>, <em class="sig-param">raw_refs=None</em>, <em class="sig-param">mode='wb'</em>, <em class="sig-param">compresslevel=6</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pylazybam.bam._FileBase</span></code></p>
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush and write any data to the BAM file before finalizing and closing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.get_full_raw_header">
+<code class="sig-name descname">get_full_raw_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.get_full_raw_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a complete BAM header with all elements suitable for writing to a
+bam.FileWriter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The complete raw BAM header including the BAM magic and reference
+block</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.get_updated_header">
+<code class="sig-name descname">get_updated_header</code><span class="sig-paren">(</span><em class="sig-param">id: str</em>, <em class="sig-param">program: str</em>, <em class="sig-param">version: str</em>, <em class="sig-param">command: str = None</em>, <em class="sig-param">description: str = None</em>, <em class="sig-param">raw_header=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.get_updated_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a modified version of the header with additional program information
+in a &#64;PG BAM header suitable for writing to a new output file.</p>
+<p>Does not include the BAM magic or the BAM reference block.</p>
+<p>Note that the header should be written after self.magic and before
+self.raw_refs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – a unique identifier of this action of the program on the BAM</p></li>
+<li><p><strong>program</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the program used to process the BAM</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – version number of the program used to process the BAM</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the command and arguments to the program used to process the BAM</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – optional description</p></li>
+<li><p><strong>raw_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a raw BAM formatted header without BAM magic or REF block
+used for recursive modification to add multiple</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Parameters will be utf-8 encoded
+If there are existing &#64;PG records the last record will be used as PP</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#pylazybam.bam.FileWriter.update_header" title="pylazybam.bam.FileWriter.update_header"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update_header()</span></code></a>, <a class="reference internal" href="#pylazybam.bam.FileWriter.get_full_raw_header" title="pylazybam.bam.FileWriter.get_full_raw_header"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_full_raw_header()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.seekable">
+<code class="sig-name descname">seekable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.seekable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the seek state of the file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.tell">
+<code class="sig-name descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.tell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current location of the pointer in the file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.update_header">
+<code class="sig-name descname">update_header</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.update_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use get_updated_header to update self.raw_header inplace</p>
+<p>See get_updated_header for Parameters and documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.update_header_length">
+<code class="sig-name descname">update_header_length</code><span class="sig-paren">(</span><em class="sig-param">raw_header=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.update_header_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the length of the SAM format text component of the header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – optional raw SAM text header as bytes to process
+Default self.raw_header</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the length corrected raw header if a raw header is provided</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write output to the BAM file.
+Data is buffered by the underlying bgzf method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – The data to be written to the BAM file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pylazybam.bam.FileWriter.write_header">
+<code class="sig-name descname">write_header</code><span class="sig-paren">(</span><em class="sig-param">raw_header=None</em>, <em class="sig-param">raw_refs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pylazybam.bam.FileWriter.write_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the header information to the BAM file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A raw byte format header containing the standard SAM format header
+Default : self.raw_header</p></li>
+<li><p><strong>raw_refs</strong> – A raw bytestring containing the reference sequence header data
+Default : self.raw_refs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.8)"><strong>RuntimeError</strong></a> – Raises a runtime error if header information already written</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_bin">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_bin</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_bin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the BAI index bin from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The integer value of the index bin</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_flag">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_flag</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the alignment flag from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The alignment flag</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Flag values can be tested on raw BAM alignment with pylazybam.bam.is_flag()
+Common flag values are available from pylazybam.bam.FLAGS</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pylazybam</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">FLAGS</span><span class="p">)</span>
+<span class="go">{&quot;paired&quot;: 0x1,</span>
+<span class="go">&quot;aligned&quot;: 0x2,</span>
+<span class="go">&quot;unmapped&quot;: 0x4,</span>
+<span class="go">&quot;pair_unmapped&quot;: 0x8,</span>
+<span class="go">&quot;forward&quot;: 0x40,</span>
+<span class="go">&quot;reverse&quot;: 0x80,</span>
+<span class="go">&quot;secondary&quot;: 0x100,</span>
+<span class="go">&quot;qc_fail&quot;: 0x200,</span>
+<span class="go">&quot;duplicate&quot;: 0x400,</span>
+<span class="go">&quot;supplementary&quot;: 0x800,}</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://samtools.github.io/hts-specs/SAMv1.pdf">https://samtools.github.io/hts-specs/SAMv1.pdf</a> for details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_len_read_name">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_len_read_name</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_len_read_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the length of the read name from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The length of the read name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_len_sequence">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_len_sequence</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_len_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the sequence length from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the length of the sequence</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The decoded quality string will be the same length as the sequence</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_mapq">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_mapq</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_mapq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the read mapping quality score from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The integer mapping quality score</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_number_cigar_operations">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_number_cigar_operations</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_number_cigar_operations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the number of cigar operations from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of operations in the cigar string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_pair_pos">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_pair_pos</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_pair_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the one based position of this reads pair from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The one based left aligned position of this reads pair on the reference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_pair_ref_index">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_pair_ref_index</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_pair_ref_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the index identifying the reference sequence of this query
+sequences pair from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The zero based rank of the reference in the BAM header</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The index can be converted to the reference name with
+pylazybam.bam.FileReader().index_to_ref[index]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_pos">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_pos</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the one based position of this read</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The one based left aligned position of this read on the reference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_raw_base_qual">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_raw_base_qual</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">len_read_name: int</em>, <em class="sig-param">number_cigar_operations: int</em>, <em class="sig-param">len_sequence: int</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#pylazybam.bam.get_raw_base_qual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the raw base qualities from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+<li><p><strong>number_cigar_operations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of cigar operations
+eg from pylazybam.bam.get_number_cigar_operations()</p></li>
+<li><p><strong>len_sequence</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the sequence and quality score strings
+eg from pylazybam.bam.get_len_sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The raw base qualities in BAM format as a binary bytestring</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_raw_cigar">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_raw_cigar</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">len_read_name: int</em>, <em class="sig-param">number_cigar_operations: int</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#pylazybam.bam.get_raw_cigar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the raw cigar string from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+<li><p><strong>number_cigar_operations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of cigar operations
+eg from pylazybam.bam.get_number_cigar_operations()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The raw base cigar string in BAM format as a binary bytestring</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_raw_read_name">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_raw_read_name</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">read_name_length: int</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#pylazybam.bam.get_raw_read_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the raw readname from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The raw base readname in BAM format as a binary bytestring</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_raw_sequence">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_raw_sequence</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">len_read_name: int</em>, <em class="sig-param">number_cigar_operations: int</em>, <em class="sig-param">len_sequence: int</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#pylazybam.bam.get_raw_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the raw sequence from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+<li><p><strong>number_cigar_operations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of cigar operations
+eg from pylazybam.bam.get_number_cigar_operations()</p></li>
+<li><p><strong>len_sequence</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the sequence and quality score strings
+eg from pylazybam.bam.get_len_sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The raw sequence in BAM format as a binary bytestring</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_read_name">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_read_name</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">read_name_length: int</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.bam.get_read_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the read name in ASCII SAM format from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The read name in ASCII SAM format</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_ref_index">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_ref_index</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_ref_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the reference index from a BAM alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The zero based rank of the reference in the BAM header</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The index can be converted to the reference name with
+pylazybam.bam.FileReader().index_to_ref[index]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_tag_bytestring">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_tag_bytestring</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">len_read_name: int</em>, <em class="sig-param">number_cigar_operations: int</em>, <em class="sig-param">len_sequence: int</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#pylazybam.bam.get_tag_bytestring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the raw tags from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>len_read_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the readname string
+eg from pylazybam.bam.get_len_read_name()</p></li>
+<li><p><strong>number_cigar_operations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of cigar operations
+eg from pylazybam.bam.get_number_cigar_operations()</p></li>
+<li><p><strong>len_sequence</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the sequence and quality score strings
+eg from pylazybam.bam.get_len_sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The raw tags in BAM format as a binary bytestring</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.bam.get_template_len">
+<code class="sig-prename descclassname">pylazybam.bam.</code><code class="sig-name descname">get_template_len</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.bam.get_template_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the template length from a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The integer length of the template
+(The distance between aligned read pairs)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="pylazybam-decoders-module">
+<h2>pylazybam.decoders module<a class="headerlink" href="#pylazybam-decoders-module" title="Permalink to this headline">¶</a></h2>
+<p>Format decoders for BAM alignment data types</p>
+<span class="target" id="module-pylazybam.decoders"></span><dl class="function">
+<dt id="pylazybam.decoders.decode_base_qual">
+<code class="sig-prename descclassname">pylazybam.decoders.</code><code class="sig-name descname">decode_base_qual</code><span class="sig-paren">(</span><em class="sig-param">raw_base_qual: bytes</em>, <em class="sig-param">offset: int = 33</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.decoders.decode_base_qual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode raw BAM base quality scores into ASCII values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_base_qual</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – The base quality section of a BAM alignment record as bytes
+eg the output from pylazybam.bam.get_raw_base_qual()</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The offset to add to the quality values when converting to ASCII</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The ASCII encoded SAM representation of the quality scores</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.decoders.decode_cigar">
+<code class="sig-prename descclassname">pylazybam.decoders.</code><code class="sig-name descname">decode_cigar</code><span class="sig-paren">(</span><em class="sig-param">raw_cigar: bytes</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.decoders.decode_cigar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode raw BAM cigar strings into ASCII values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_cigar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – The cigar section of a BAM alignment record as bytes
+eg the output of pylazybam.bam.get_raw_cigar()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The ASCII encoded SAM representation of the cigar string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.decoders.decode_sequence">
+<code class="sig-prename descclassname">pylazybam.decoders.</code><code class="sig-name descname">decode_sequence</code><span class="sig-paren">(</span><em class="sig-param">raw_seq: bytes</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.decoders.decode_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode raw BAM sequence into ASCII values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_seq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – The sequence section of a BAM alignment record as bytes
+eg the output of pybam.bam.get_raw_sequence()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The ASCII encoded SAM representation of the query sequence</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.decoders.is_flag">
+<code class="sig-prename descclassname">pylazybam.decoders.</code><code class="sig-name descname">is_flag</code><span class="sig-paren">(</span><em class="sig-param">alignment: bytes</em>, <em class="sig-param">flag: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pylazybam.decoders.is_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test BAM flag values against a BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alignment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – A byte string of a bam alignment entry in raw binary format</p></li>
+<li><p><strong>flag</strong> – An integer representing the bitmask to compare to the</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns true if all bits in the bitmask are set in the flag value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Common flag values are available from pylazybam.bam.FLAGS</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pylazybam</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">FLAGS</span><span class="p">)</span>
+<span class="go">{&quot;paired&quot;: 0x1,</span>
+<span class="go">&quot;aligned&quot;: 0x2,</span>
+<span class="go">&quot;unmapped&quot;: 0x4,</span>
+<span class="go">&quot;pair_unmapped&quot;: 0x8,</span>
+<span class="go">&quot;forward&quot;: 0x40,</span>
+<span class="go">&quot;reverse&quot;: 0x80,</span>
+<span class="go">&quot;secondary&quot;: 0x100,</span>
+<span class="go">&quot;qc_fail&quot;: 0x200,</span>
+<span class="go">&quot;duplicate&quot;: 0x400,</span>
+<span class="go">&quot;supplementary&quot;: 0x800,}</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://samtools.github.io/hts-specs/SAMv1.pdf">https://samtools.github.io/hts-specs/SAMv1.pdf</a> for details.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pylazybam-tags-module">
+<h2>pylazybam.tags module<a class="headerlink" href="#pylazybam-tags-module" title="Permalink to this headline">¶</a></h2>
+<p>Functions for extracting and decoding SAM tag data from BAM alignments</p>
+<span class="target" id="module-pylazybam.tags"></span><dl class="function">
+<dt id="pylazybam.tags.get_AS">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_AS</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">no_tag: Any = -2147483648</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.tags.get_AS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the high scoring alignment score from an AS tag in a raw BAM
+alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: MIN32INT)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>AS Tag Value</strong> – the integer value of the AS tag
+returns the value of no_tag if tag absent (default:MIN32INT)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Recommended try accept for use on raw alignment with fall back
+to calling on only the tag byte string.</p>
+<p>Please test carefully on your BAM output as in complicated output the
+regular expression based extraction of the tag can be error prone</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.tags.get_MD">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_MD</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">no_tag: Any = None</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.tags.get_MD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the MD tag from a raw BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>MD Tag Value</strong> – an ASCII string representing the SAM format value of the MD tag
+returns the value of no_tag if tag absent (default: None)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The MD field aims to achieve SNP/indel calling independent of the reference.
+Numbers represent matches, letters bases that differ from the reference and
+bases preceeded by ^ are deletions. A ^T0A indicates a base change to an A
+immediately following a deleted T.</p>
+<p>Recommended try accept for use on raw alignment with fall back
+to calling on only the tag byte string.</p>
+<p>Please test carefully on your BAM output as in complicated output the
+regular expression based extraction of the tag can be error prone</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.tags.get_XS">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_XS</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">no_tag: Any = -2147483648</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.tags.get_XS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the suboptimal alignment score from an XS tag in a raw BAM
+alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: MIN32INT)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>XS Tag Value</strong> – the integer value of the XS tag
+returns the value of no_tag if tag absent (default:MIN32INT)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function is for the genome aligner definition of XS where XS:i:&lt;int&gt;
+is the alignment score of the suboptimal alignment.
+This is not the same as the spliced aligner XS tag XS:C:&lt;str&gt; that
+represents the strand on which the intron occurs (equiv to TS:C:&lt;str&gt;)</p>
+<p>Recommended try accept for use on raw alignment with fall back
+to calling on only the tag byte string.</p>
+<p>Please test carefully on your BAM output as in complicated output the
+regular expression based extraction of the tag can be error prone</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.tags.get_ZS">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_ZS</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">no_tag: Any = -2147483648</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.tags.get_ZS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the suboptimal alignment score from the ZS tag in a raw BAM
+alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: MIN32INT)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>ZS Tag Value</strong> – the integer value of the ZS tag
+returns the value of no_tag if tag absent (default:MIN32INT)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>ZS is the equivalent to XS:i:&lt;int&gt; tag in some spliced aligners
+including HISAT2.</p>
+<p>Recommended try accept for use on raw alignment with fall back
+to calling on only the tag byte string.</p>
+<p>Please test carefully on your BAM output as in complicated output the
+regular expression based extraction of the tag can be error prone</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.tags.get_int_tag">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_int_tag</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">tag: bytes</em>, <em class="sig-param">no_tag: Any = -2147483648</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pylazybam.tags.get_int_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract an integer format tag from a raw BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – the two byte tag to be returned eg b’AS’
+The tag must represent an integer format tag</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: MIN32INT)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the integer value of the tag
+returns the value of no_tag if tag absent (default:MIN32INT)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p>Potential values for the tag parameter include:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>AM:i:score  The smallest template-independent mapping quality of any</dt><dd><p>segment in the same template as this read. (See also SM.)</p>
+</dd>
+</dl>
+<p>AS:i:score  Alignment score generated by aligner.</p>
+<p>CP:i:pos    Leftmost coordinate of the next hit.</p>
+<p>FI:i:int    The index of segment in the template.</p>
+<p>H0:i:count  Number of perfect hits.</p>
+<p>H1:i:count  Number of 1-difference hits (see also NM).</p>
+<p>H2:i:count  Number of 2-difference hits.</p>
+<dl class="simple">
+<dt>HI:i:i      Query hit index, indicating the alignment record is the</dt><dd><p>i-th one stored in SAM.</p>
+</dd>
+<dt>IH:i:count  Number of alignments stored in the file that contain the</dt><dd><p>query in the current record.</p>
+</dd>
+</dl>
+<p>MQ:i:score  Mapping quality of the mate/next segment.</p>
+<dl class="simple">
+<dt>NH:i:count  Number of reported alignments that contain the query in</dt><dd><p>the current record.</p>
+</dd>
+<dt>NM:i:count  Number of differences (mismatches plus inserted and deleted</dt><dd><p>bases) between the sequence and reference, counting only
+(case-insensitive) A, C, G and T bases in sequence and
+reference as potential matches, with everything else being
+a mismatch.</p>
+</dd>
+<dt>PQ:i:score  Phred likelihood of the template, conditional on the mapping</dt><dd><p>locations of both/all segments being correct.</p>
+</dd>
+<dt>SM:i:score  Template-independent mapping quality, i.e., the mapping</dt><dd><p>quality if the read were mapped as a single read rather
+than as part of a read pair or template.</p>
+</dd>
+</dl>
+<p>TC:i:       The number of segments in the template.</p>
+<dl class="simple">
+<dt>UQ:i:       Phred likelihood of the segment,</dt><dd><p>conditional on the mapping being correct.</p>
+</dd>
+</dl>
+<p>see <a class="reference external" href="https://samtools.github.io/hts-specs/SAMtags.pdf">https://samtools.github.io/hts-specs/SAMtags.pdf</a></p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pylazybam.tags.get_str_tag">
+<code class="sig-prename descclassname">pylazybam.tags.</code><code class="sig-name descname">get_str_tag</code><span class="sig-paren">(</span><em class="sig-param">tag_bytes: bytes</em>, <em class="sig-param">tag: bytes</em>, <em class="sig-param">no_tag: Any = None</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pylazybam.tags.get_str_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract an integer format tag from a raw BAM alignment bytestring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – a bytestring containing bam formatted tag elements</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.8)"><em>bytes</em></a>) – the two byte tag to be returned eg b’AS’
+The tag must represent an integer format tag</p></li>
+<li><p><strong>no_tag</strong> (<em>Any</em>) – return value for when tag not found (default: None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>MD Tag Value</strong> – an ASCII string representing the SAM format value of the MD tag
+returns the value of no_tag if tag absent (default: None)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – raises a ValueError if more than one tag match</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Potential values for the tag parameter include:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>BQ:Z:qualities  Offset to base alignment quality (BAQ), of the same</dt><dd><p>length as the read sequence. At the i-th read base,
+BAQi = Qi − (BQi − 64) where Qi is the i-th base quality</p>
+</dd>
+</dl>
+<p>CC:Z:rname      Reference name of the next hit; ‘=’ for same chromosome.</p>
+<dl class="simple">
+<dt>E2:Z:bases      The 2nd most likely base calls.</dt><dd><p>Same encoding and same length as SEQ.</p>
+</dd>
+</dl>
+<p>FS:Z:str        Segment suffix.</p>
+<p>MC:Z:cigar      CIGAR string for mate/next segment.</p>
+<p>MD:Z:           String for mismatching positions.</p>
+<dl class="simple">
+<dt>Q2:Z:qualities  Phred quality of the mate/next segment sequence in the</dt><dd><p>R2 tag. Same encoding as QUAL.</p>
+</dd>
+</dl>
+<p>R2:Z:bases      Sequence of the mate/next segment in the template.</p>
+<dl class="simple">
+<dt>SA:Z:           (rname ,pos ,strand ,CIGAR ,mapQ ,NM ;)+</dt><dd><p>Other canonical alignments in a chimeric alignment,
+formatted as a semicolon-delimited list.</p>
+</dd>
+<dt>U2:Z:           Phred probability of the 2nd call being wrong</dt><dd><p>conditional on the best being wrong.</p>
+</dd>
+</dl>
+<p>RG:Z:readgroup  The read group to which the read belongs.</p>
+<p>LB:Z:library    The library from which the read has been sequenced.</p>
+<p>PG:Z:program id Program. Value matches the header PG-ID tag</p>
+<p>PU:Z:platformunit The platform unit in which the read was sequenced.</p>
+<p>CO:Z:text       Free-text comments.</p>
+<dl class="simple">
+<dt>BC:Z:sequence   Barcode sequence (Identifying the sample/library),</dt><dd><p>with any quality scores (optionally) stored in  QT tag.
+The BC tag should match the QT tag in length.</p>
+</dd>
+<dt>QT:Z:qualities  Phred quality of the sample barcode sequence in BC tag.</dt><dd><p>Same encoding as QUAL, i.e., Phred score + 33.</p>
+</dd>
+<dt>CB:Z:str        Cell identifier, consisting of the optionally-corrected</dt><dd><p>cellular barcode sequence and an optional suffix.
+The sequence part is similar to the CR tag</p>
+</dd>
+<dt>CR:Z:sequence+  Cellular barcode. The uncorrected sequence bases of the</dt><dd><p>cellular barcode as reported by the sequencing machine,
+with the corresponding base quality scores (optionally)
+stored in CY.</p>
+</dd>
+<dt>CY:Z:qualities+ Phred quality of the cellular barcode sequence in CR tag</dt><dd><p>Same encoding as QUAL, i.e., Phred score + 33.</p>
+</dd>
+<dt>MI:Z:str        Molecular Identifier. A unique ID within the SAM file</dt><dd><p>for the source molecule from which this read is derived.</p>
+</dd>
+<dt>OX:Z:sequence+  Raw (uncorrected) unique molecular identifier bases,</dt><dd><p>with  quality scores (optionally) stored in the BZ tag.</p>
+</dd>
+<dt>BZ:Z:qualities+ Phred quality of the (uncorrected) unique molecular</dt><dd><p>identifier sequence in the OX tag.
+Same encoding as QUAL, i.e., Phred score + 33.</p>
+</dd>
+<dt><a class="reference external" href="RX:Z:sequence+">RX:Z:sequence+</a>  Sequence bases from the unique molecular identifier.</dt><dd><p>These could be either corrected or uncorrected.
+Unlike MI, the value may be non-unique in the file.</p>
+</dd>
+<dt>QX:Z:qualities+ Phred quality of the unique molecular identifier</dt><dd><p>sequence in the RX tag.
+Same encoding as QUAL, i.e., Phred score + 33</p>
+</dd>
+<dt>OA:Z:(RNAME,POS,strand,CIGAR,MAPQ,NM;)+ The original alignment</dt><dd><p>information of the record prior to realignment or
+unalignment by a subsequent tool.</p>
+</dd>
+</dl>
+<p>OC:Z:cigar      Original CIGAR, usually before realignment.</p>
+<dl class="simple">
+<dt>CT:Z:strand ;type (;key (=value )?)* Complete read annotation tag</dt><dd><p>used for consensus annotation dummy features.</p>
+</dd>
+<dt>PT:Z:annotag(|annotag)* where each annotag matches</dt><dd><p>start;end;strand;type(;key(=value)?)*
+Read annotations for parts of the padded read sequence.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>see <a class="reference external" href="https://samtools.github.io/hts-specs/SAMtags.pdf">https://samtools.github.io/hts-specs/SAMtags.pdf</a></p>
+<p>Recommended try accept for use on raw alignment with fall back
+to calling on only the tag byte string.</p>
+<p>Please test carefully on your BAM output as in complicated output the
+regular expression based extraction of the tag can be error prone</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pylazybam</a><ul>
+<li><a class="reference internal" href="#pylazybam-bam-module">pylazybam.bam module</a></li>
+<li><a class="reference internal" href="#pylazybam-decoders-module">pylazybam.decoders module</a></li>
+<li><a class="reference internal" href="#pylazybam-tags-module">pylazybam.tags module</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pylazybam.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pylazybam 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Matthew J Wakefield.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.1.
+    </div>
+  </body>
+</html>
