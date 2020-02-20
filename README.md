@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/genomematt/pylazybam.svg?branch=master)](https://travis-ci.org/genomematt/pylazybam)
 [![Coverage Status](https://coveralls.io/repos/genomematt/pylazybam/badge.svg)](https://coveralls.io/r/genomematt/pylazybam)
 [![DOI](https://zenodo.org/badge/189527217.svg)](https://zenodo.org/badge/latestdoi/189527217)
-[![ReadTheDocs](https://pylazybam.readthedocs.io/en/latest/?badge=latest)](https://pylazybam.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/pylazybam/badge/?version=latest)](https://pylazybam.readthedocs.io/en/latest/?badge=latest)
 [![PyPI](https://img.shields.io/pypi/v/pylazybam.svg)](https://pypi.python.org/pypi/pylazybam/)
 
 Pylazybam
