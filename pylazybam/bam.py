@@ -8,7 +8,7 @@ License     : BSD-3-Clause
 Maintainer  : matthew.wakefield@unimelb.edu.au 
 Portability : POSIX
 """
-import struct
+import struct, io
 from pathlib import Path
 from typing import BinaryIO, Generator, Tuple, Dict
 from pylazybam.bgzf import BgzfWriter
@@ -638,7 +638,7 @@ class FileReader(_FileBase):
     """
 
     def __init__(self, ubam: BinaryIO):
-        self._ubam = ubam
+        self._ubam = io.BufferedReader(ubam)
         self.magic = self._ubam.read(4)
         if self.magic != b"BAM\x01":
             raise ValueError(
